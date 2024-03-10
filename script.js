@@ -1,8 +1,17 @@
+let music = new Audio("music/music.mp3")
+music.volume = 0.5;
+let click_music = new Audio("music/ting.mp3 ")
+let gameover = new Audio("music/gameover.mp3")
+let lose_audio = new Audio("music/lose.mp3")
+let won_audio = new Audio("music/won.mp3")
+let tie_audio = new Audio("music/tie.mp3")
+
 let score = JSON.parse(localStorage.getItem('score')) || {
   wins: 0,
   losses: 0,
   ties: 0
 };
+
 
 updateScoreElement();
 
@@ -15,8 +24,9 @@ if (!score) {
   };
 }
 */
-
+music.play();
 function playGame(playerMove) {
+  click_music.play();
   const computerMove = pickComputerMove();
 
   let result = '';
@@ -47,6 +57,14 @@ function playGame(playerMove) {
     } else if (computerMove === 'scissors') {
       result = 'You win.';
     }
+  }
+
+  if (result === 'You win.') {
+    won_audio.play();
+  } else if (result === 'You lose.') {
+    lose_audio.play();
+  } else if (result === 'Tie.') {
+    tie_audio.play();
   }
 
   if (result === 'You win.') {
