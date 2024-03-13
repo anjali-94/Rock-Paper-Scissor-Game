@@ -24,7 +24,7 @@ if (!score) {
   };
 }
 */
-music.play();
+
 function playGame(playerMove) {
   click_music.play();
   const computerMove = pickComputerMove();
