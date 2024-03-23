@@ -1,10 +1,9 @@
-let music = new Audio("music/music.mp3")
+let music = new Audio("music/music.mp3");
 music.volume = 0.5;
-let click_music = new Audio("music/ting.mp3 ")
-let gameover = new Audio("music/gameover.mp3")
-let lose_audio = new Audio("music/lose.mp3")
-let won_audio = new Audio("music/won.mp3")
-let tie_audio = new Audio("music/tie.mp3")
+let click_music = new Audio("music/ting.mp3 ");
+let lose_audio = new Audio("music/lose.mp3");
+let won_audio = new Audio("music/won.mp3");
+let tie_audio = new Audio("music/tie.mp3");
 
 let score = JSON.parse(localStorage.getItem('score')) || {
   wins: 0,
@@ -24,6 +23,48 @@ if (!score) {
   };
 }
 */
+
+let isAutoPlaying = false;
+let intervalvalid;
+
+function autoPlay() {
+  if(!isAutoPlaying) {
+     intervalvalid = setInterval(function() {
+      const playerMove = pickComputerMove();
+      playGame(playerMove);
+    }, 1500);
+    isAutoPlaying = true;
+  } else{
+    clearInterval(intervalvalid);
+    isAutoPlaying = false;
+  }
+  
+}
+
+document.querySelector('.js-rock-button').addEventListener('click', () => {
+  playGame('rock');
+});
+
+document.querySelector('.js-paper-button').addEventListener('click', () => {
+  playGame('paper');
+});
+
+document.querySelector('.js-scissors-button').addEventListener('click', () => {
+  playGame('scissors');
+});
+
+document.body.addEventListener('keydown', (event) => {
+  if(event.key === 'r') {
+    playGame('rock');
+  } else if(event.key === 'p') {
+    playGame('paper');
+  } else if(event.key === 's') {
+    playGame('scissors');
+  }
+});
+
+
+
 
 function playGame(playerMove) {
   click_music.play();
@@ -48,7 +89,7 @@ function playGame(playerMove) {
     } else if (computerMove === 'scissors') {
       result = 'You lose.';
     }
-    
+
   } else if (playerMove === 'rock') {
     if (computerMove === 'rock') {
       result = 'Tie.';
@@ -59,20 +100,23 @@ function playGame(playerMove) {
     }
   }
 
-  if (result === 'You win.') {
-    won_audio.play();
-  } else if (result === 'You lose.') {
-    lose_audio.play();
-  } else if (result === 'Tie.') {
-    tie_audio.play();
-  }
+  // if (result === 'You win.') {
+  //   won_audio.play();
+  // } else if (result === 'You lose.') {
+  //   lose_audio.play();
+  // } else if (result === 'Tie.') {
+  //   tie_audio.play();
+  // }
 
   if (result === 'You win.') {
     score.wins += 1;
+    won_audio.play();
   } else if (result === 'You lose.') {
     score.losses += 1;
+    lose_audio.play();
   } else if (result === 'Tie.') {
     score.ties += 1;
+    tie_audio.play();
   }
 
   localStorage.setItem('score', JSON.stringify(score));
@@ -83,12 +127,12 @@ function playGame(playerMove) {
   document.querySelector('.js-moves').innerHTML = `You
   <img src="images/${playerMove}-emoji.png" class="move-icon">
   <img src="images/${computerMove}-emoji.png" class="move-icon">
-  Computer` 
+  Computer`
 }
 
 function updateScoreElement() {
   document.querySelector('.js-score')
-.innerHTML = `Wins: ${score.wins}, Losses: ${score.losses}, Ties: ${score.ties}`;
+    .innerHTML = `Wins: ${score.wins}, Losses: ${score.losses}, Ties: ${score.ties}`;
 }
 
 function pickComputerMove() {
